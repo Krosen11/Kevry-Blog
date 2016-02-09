@@ -12,16 +12,21 @@ public class Post implements Comparable<Post>{
 	@Id Long id;
 	//Additional parameters for each post should be variables here
 	User user;
+	String title;
 	String content;
 	Date date;
 	private Post() {}
-   public Post(User user, String content) {
+   public Post(User user, String title, String content) {
        this.user = user;
+       this.title = title;
        this.content = content;
        date = new Date();
    }
    public User getUser() {
        return user;
+   }
+   public String getTitle() {
+   	return title;
    }
    public String getContent() {
        return content;
