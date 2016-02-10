@@ -48,6 +48,11 @@
 	%>
   	<p>Testing</p>
   	<%
+  		if (user != null) {
+  	%>
+  	<button type="button" value="Post">Make Post</button>
+  	<%
+  		}
     // Run an ancestor query to ensure we see the most up-to-date
     // view of the Greetings belonging to the selected Guestbook.
  	 ObjectifyService.register(Post.class);
