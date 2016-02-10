@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="kevryblog.Post" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="com.google.appengine.api.users.User" %>
@@ -24,7 +25,12 @@
  
   <body>
   <%
-  UserService userService = UserServiceFactory.getUserService();
+  String guestbookName = request.getParameter("guestbookName");
+    if (guestbookName == null) {
+        guestbookName = "default";
+    }
+    pageContext.setAttribute("guestbookName", guestbookName);
+  	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     if (user != null) {
       pageContext.setAttribute("user", user);
@@ -41,5 +47,49 @@
 	    }
 	%>
   	<p>Testing</p>
+  	<%
+    // Run an ancestor query to ensure we see the most up-to-date
+    // view of the Greetings belonging to the selected Guestbook.
+ 	 ObjectifyService.register(Post.class);
+ 	 List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();   
+	 Collections.sort(posts); 
+    if (posts.isEmpty()) {
+        %>
+        <p>Kevry Blog '${fn:escapeXml(guestbookName)}' has no blog posts.</p>
+        <%
+    } else {
+        %>
+        <p>Messages in Kevry Blog '${fn:escapeXml(guestbookName)}'.</p>
+        <%
+        for (Post post : posts) {
+        		pageContext.setAttribute("post_title",
+                                     post.getTitle());
+            pageContext.setAttribute("post_content",
+                                     post.getContent());
+            if (post.getUser() == null) {
+                %>
+                <p>An anonymous person wrote:</p>
+                <%
+            } else {
+                pageContext.setAttribute("post_user",
+                                         post.getUser());
+                %>
+                <p><b>${fn:escapeXml(post_user.nickname)}</b> wrote:</p>
+                <%
+            }
+            %>
+            <blockquote>Title: ${fn:escapeXml(post_title)}</blockquote>
+            <blockquote>Content: ${fn:escapeXml(post_content)}</blockquote>
+            <%
+        }
+    }
+	%>
+  	<p>Testing2</p>
+  	<form action="/post" method="post">
+  		<div><p>Title</p><textarea name="title" rows="1" cols="60"></textarea></div>
+      <div><p>Content</p><textarea name="content" rows="3" cols="60"></textarea></div>
+      <div><input type="submit" value="Make Blog Post" /></div>
+      <input type="hidden" name="guestbookName" value="default"/>
+    </form>
   </body>
 </html>
