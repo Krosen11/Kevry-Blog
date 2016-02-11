@@ -50,7 +50,7 @@
   	<%
   		if (user != null) {
   	%>
-  	<button type="button" value="Post">Make Post</button>
+  	<button id="makePost" type="button" value="Post">Make Post</button>
   	<%
   		}
     // Run an ancestor query to ensure we see the most up-to-date
@@ -90,11 +90,34 @@
     }
 	%>
   	<p>Testing2</p>
+  	<!-- 
   	<form action="/post" method="post">
   		<div><p>Title</p><textarea name="title" rows="1" cols="60"></textarea></div>
       <div><p>Content</p><textarea name="content" rows="3" cols="60"></textarea></div>
       <div><input type="submit" value="Make Blog Post" /></div>
       <input type="hidden" name="guestbookName" value="default"/>
     </form>
+     -->
+    <form id="form" action="/post" method="post">
+	    <div id="blogModal" class="modal fade" role="dialog">
+	    	<div class="modal-dialog">
+	    		<div class="modal-content">
+	    			<div class="modal-header">
+	    				<h4 id="modalTitle">Title</h4>
+	    				<textarea name="title" rows="1" cols="60"></textarea>
+	    			</div>
+	    			<div class="modal-body">
+	    				<h4 id="modalText">Content</h4>
+	    				<textarea name="content" rows="3" cols="60"></textarea>
+	    			</div>
+	    			<div class="modal-footer">
+	    				<button type="button" data-dismiss="modal" class="btn btn-primary" id="submitPost">Submit Blog Post</button>
+	    				<button type="button" data-dismiss="modal" class="btn" id="cancel">Cancel</button>
+	    			</div>
+	    		</div>
+	    	</div>
+	    </div>
+    </form>
+    <script src="scripts/blog.js"></script>
   </body>
 </html>
