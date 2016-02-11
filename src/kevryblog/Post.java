@@ -22,6 +22,9 @@ public class Post implements Comparable<Post>{
        this.content = content;
        date = new Date();
    }
+   public Long getId() {
+   	return id;
+   }
    public User getUser() {
        return user;
    }
@@ -30,6 +33,9 @@ public class Post implements Comparable<Post>{
    }
    public String getContent() {
        return content;
+   }
+   public Date getDate() {
+   	return date;
    }
 	@Override
 	public int compareTo(Post other) {
