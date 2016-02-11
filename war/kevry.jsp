@@ -51,6 +51,7 @@
   	<%
   		if (user != null) {
   	%>
+  	<hr>
   	<div>
   	<button id="makePost" type="button" value="Post">Make Post</button>
   	<button id="managePosts" type="button" value="Manage">Manage Posts</button>
