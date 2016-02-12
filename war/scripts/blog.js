@@ -21,5 +21,19 @@ function deletePost(item) {
 	$("#manage").submit();
 }
 
+function openBlogPost(item) {
+	//Now we need to get all the post information and fill the modal before we show it
+	var elem = $(item);
+	$("#post-modal-title").text(elem.text().substring(6));
+	elem = elem.next();
+	$("#post-modal-author").text("Post by: " + elem.text() + ", ");
+	elem = elem.next();
+	$("#post-modal-date").text("Date: " + elem.text());
+	elem = elem.next();
+	$("#post-modal-content").text(elem.text());
+	//Show the modal
+	$("#postModal").modal({backdrop: 'static', keyboard: false});
+}
+
 $("#makePost").click(modalPopup);
 $("#managePosts").click(managePosts);

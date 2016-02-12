@@ -1,16 +1,38 @@
 body {
    font-family: Verdana, Helvetica, sans-serif;
-   background-color: #F5F5F5;
+   background-image: url("concrete_seamless.png");
 }
 
 .content {
 	font-size: 125%;
 }
 
-p.post-id {
-	visibility: hidden;
+.page-div {
+	width: 100%;
+}
+
+.btn-div,.post-div {
+	width: 50%;
+	margin: 0 auto;
+}
+
+p.post-id,.post-info {
+	display: none;
 }
 
 #banner {
 	padding-top: 1em;
+}
+
+.title {
+	text-decoration: underline;
+}
+
+.title:hover {
+	color: #0080c0;
+}
+
+#username {
+	color: #499847;
+	text-decoration: underline;
 }

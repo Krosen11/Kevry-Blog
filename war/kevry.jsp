@@ -27,6 +27,7 @@
  
   <body>
   <img id="banner" src="/stylesheets/kevry-name.png">
+  <div class="page-div">
   <%
   String guestbookName = request.getParameter("guestbookName");
     if (guestbookName == null) {
@@ -38,14 +39,14 @@
     if (user != null) {
       pageContext.setAttribute("user", user);
 	%>
-	<p>Hello, ${fn:escapeXml(user.nickname)}! (You can
-	<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
+	<p>Welcome back <span id="username">${fn:escapeXml(user.nickname)}</span>! (You can sign out
+	<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">here</a>.)</p>
 	<%
 	    } else {
 	%>
 	<p>Hello!
 	<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
-	to include your name with greetings you post.</p>
+	 to make posts!</p>
 	<hr>
 	<%
 	    }
@@ -53,25 +54,20 @@
   	<%
   		if (user != null) {
   	%>
-  	<div>
+  	<div class="btn-div">
   	<button id="makePost" type="button" value="Post">Make Post</button>
   	<button id="managePosts" type="button" value="Manage">Manage Posts</button>
   	</div>
   	<%
   		}
-    // Run an ancestor query to ensure we see the most up-to-date
-    // view of the Greetings belonging to the selected Guestbook.
  	 ObjectifyService.register(Post.class);
  	 List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();   
 	 Collections.sort(posts); 
     if (posts.isEmpty()) {
         %>
-        <p>Kevry Blog '${fn:escapeXml(guestbookName)}' has no blog posts.</p>
+        <p>There are currently no posts in Kevry Blog. Please stay tuned!</p>
         <%
     } else {
-        %>
-        <p>Messages in Kevry Blog '${fn:escapeXml(guestbookName)}'.</p>
-        <%
         for (Post post : posts) {
         		pageContext.setAttribute("post_title", post.getTitle());
             pageContext.setAttribute("post_content", post.getContent());
@@ -84,19 +80,19 @@
             } else {
                 pageContext.setAttribute("post_user",
                                          post.getUser());
-                %>
-                <!-- <p><b>${fn:escapeXml(post_user.nickname)}</b> wrote:</p> -->
-                <%
             }
             %>
-            <h1>Title: ${fn:escapeXml(post_title)}</h1>
-            <h6>Author: ${fn:escapeXml(post_user)}</h6>
-            <h6>Date Posted: ${fn:escapeXml(post_date)}</h6>
-            <p class="content">${fn:escapeXml(post_content)}</p>
+            <div class="post-div">
+            <h1 class="title" onclick="openBlogPost(this)">Title: ${fn:escapeXml(post_title)}</h1>
+            <p id="post-author" class="post-info">${fn:escapeXml(post_user)}</h6>
+            <p id="post-date" class="post-info">${fn:escapeXml(post_date)}</h6>
+            <p id="post-content" class="post-info">${fn:escapeXml(post_content)}</p>
+            </div>
             <%
             }
         }
 	%>
+	</div>
     <form id="form" action="/post" method="post">
 	    <div id="blogModal" class="modal fade" role="dialog">
 	    	<div class="modal-dialog">
@@ -150,6 +146,23 @@
 	    <input id="hidden-title" type="hidden" name="delete-title">
 	    <input id="hidden-id" type="hidden" name="delete-id">
     </form>
+    <div id="postModal" class="modal fade" role="dialog">
+	    	<div class="modal-dialog">
+	    		<div class="modal-content">
+	    			<div class="modal-header">
+	    				<h1 id="post-modal-title">WHA?</h1>
+	    			</div>
+	    			<div class="modal-body">
+	    				<span id="post-modal-author">Test</span>
+	    				<span id="post-modal-date">Testing</span>
+	    				<p class="content" id="post-modal-content">Hi?</p>
+	    			</div>
+	    			<div class="modal-footer">
+	    				<button type="button" data-dismiss="modal" class="btn" id="close">Close Post</button>
+	    			</div>
+	    		</div>
+	    	</div>
+	    </div>
     <script src="scripts/blog.js"></script>
   </body>
 </html>
