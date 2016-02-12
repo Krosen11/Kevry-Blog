@@ -26,6 +26,7 @@
  </head>
  
   <body>
+  <img id="banner" src="/stylesheets/kevry-name.png">
   <%
   String guestbookName = request.getParameter("guestbookName");
     if (guestbookName == null) {
@@ -45,13 +46,13 @@
 	<p>Hello!
 	<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
 	to include your name with greetings you post.</p>
+	<hr>
 	<%
 	    }
 	%>
   	<%
   		if (user != null) {
   	%>
-  	<hr>
   	<div>
   	<button id="makePost" type="button" value="Post">Make Post</button>
   	<button id="managePosts" type="button" value="Manage">Manage Posts</button>
@@ -126,7 +127,7 @@
 	    			<div class="modal-body">
 	    			<%
 	    				for (Post post : posts) {
-	    					if (user.equals(post.getUser())) {
+	    					if (user != null && user.equals(post.getUser())) {
 	    						pageContext.setAttribute("post_title", post.getTitle());
 	    						pageContext.setAttribute("post_id", post.getId());
 	    						%>
