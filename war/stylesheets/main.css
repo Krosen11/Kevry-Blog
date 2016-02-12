@@ -11,7 +11,7 @@ body {
 	width: 100%;
 }
 
-.btn-div,.post-div {
+.btn-div,.post-div,#instructions {
 	width: 50%;
 	margin: 0 auto;
 }
@@ -22,6 +22,7 @@ p.post-id,.post-info {
 
 #banner {
 	padding-top: 1em;
+	padding-left: 3em;
 }
 
 .title {
@@ -35,4 +36,9 @@ p.post-id,.post-info {
 #username {
 	color: #499847;
 	text-decoration: underline;
+}
+
+#instructions {
+	font-size: 150%;
+	padding-top: 1em;
 }

@@ -60,6 +60,9 @@
   	</div>
   	<%
   		}
+  	%>
+  	<p id="instructions">Welcome to Kevry Blog! Click on posts to read them!</p>
+  	<%
  	 ObjectifyService.register(Post.class);
  	 List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();   
 	 Collections.sort(posts); 
