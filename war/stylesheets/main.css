@@ -2,43 +2,67 @@ body {
    font-family: Verdana, Helvetica, sans-serif;
    background-image: url("concrete_seamless.png");
 }
-
-.content {
-	font-size: 125%;
-}
-
+/* Div containing the page as a whole */
 .page-div {
 	width: 100%;
-}
-
-.btn-div,.post-div,#instructions {
-	width: 50%;
-	margin: 0 auto;
-}
-
-p.post-id,.post-info {
-	display: none;
-}
-
-#banner {
-	padding-top: 1em;
 	padding-left: 3em;
 }
 
-.title {
-	text-decoration: underline;
+/* Div for the website banner */
+#banner-div {
+	display: block;
+	position: relative;
+	width: 95%;
+	background-color: #0F5D03;
 }
 
-.title:hover {
-	color: #0080c0;
+.sign-in {
+	display: inline-block;
+	position: relative;
+	float: right;
+	margin-top: 1em;
+	margin-right: 3em;
+	color: #F6ED02;
 }
 
 #username {
-	color: #499847;
 	text-decoration: underline;
 }
 
-#instructions {
-	font-size: 150%;
-	padding-top: 1em;
+a {
+	/* Used for the link to log in/out */
+	color: #15A2FF;
+}
+
+/* Div for each post */
+.post-div {
+	width: 50%;
+	border-style: groove;
+	border-width: 5px;
+	margin-bottom: 1em;
+}
+
+.title {
+	margin-top: 1px;
+	margin-bottom: 2px;
+	border-bottom-style: groove;
+	border-bottom-width: 2px;
+}
+
+.div-id {
+	background-color: red;
+	border-bottom-style: groove;
+	border-bottom-width: 2px;
+}
+
+.post-content {
+	font-size: 125%;
+	margin-top: 1em;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+/* For the manage posts modal */
+p.post-id {
+	display: none;
 }

@@ -4,6 +4,7 @@
 <%@ page import="java.util.Collections" %>
 <%@ page import="org.w3c.dom.Document" %>
 <%@ page import="org.w3c.dom.Element" %>
+<%@ page import="javax.servlet.http.HttpServletResponse" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
@@ -26,31 +27,28 @@
  </head>
  
   <body>
-  <img id="banner" src="/stylesheets/kevry-name.png">
   <div class="page-div">
+  <div id="banner-div">
+  <img id="banner" src="/stylesheets/kevry-name.png">
   <%
-  String guestbookName = request.getParameter("guestbookName");
-    if (guestbookName == null) {
-        guestbookName = "default";
-    }
-    pageContext.setAttribute("guestbookName", guestbookName);
+  	boolean listAllPosts = false;
+  	if (request.getParameter("list-all") != null) listAllPosts = true;
   	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     if (user != null) {
       pageContext.setAttribute("user", user);
 	%>
-	<p>Welcome back <span id="username">${fn:escapeXml(user.nickname)}</span>! (You can sign out
-	<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">here</a>.)</p>
+	<p class="sign-in">Welcome <span id="username">${fn:escapeXml(user.nickname)}</span> | 
+	<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Log Out</a></p>
 	<%
 	    } else {
 	%>
-	<p>Hello!
-	<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
-	 to make posts!</p>
-	<hr>
+	<p class="sign-in">Welcome Guest | 
+	<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Log in</a></p>
 	<%
 	    }
 	%>
+	</div>
   	<%
   		if (user != null) {
   	%>
@@ -60,9 +58,6 @@
   	</div>
   	<%
   		}
-  	%>
-  	<p id="instructions">Welcome to Kevry Blog! Click on posts to read them!</p>
-  	<%
  	 ObjectifyService.register(Post.class);
  	 List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();   
 	 Collections.sort(posts); 
@@ -71,28 +66,39 @@
         <p>There are currently no posts in Kevry Blog. Please stay tuned!</p>
         <%
     } else {
+   	 int numPosts = 0;
         for (Post post : posts) {
+      	  if (!listAllPosts && numPosts >= 5) break;
         		pageContext.setAttribute("post_title", post.getTitle());
             pageContext.setAttribute("post_content", post.getContent());
             pageContext.setAttribute("post_date", post.getDate());
             if (post.getUser() == null) {
             	//TODO: Remove this if-else, since all posts will be made by people logged in
-                %>
-                <p>An anonymous person wrote:</p>
-                <%
             } else {
                 pageContext.setAttribute("post_user",
                                          post.getUser());
             }
             %>
             <div class="post-div">
-            <h1 class="title" onclick="openBlogPost(this)">Title: ${fn:escapeXml(post_title)}</h1>
-            <p id="post-author" class="post-info">${fn:escapeXml(post_user)}</h6>
-            <p id="post-date" class="post-info">${fn:escapeXml(post_date)}</h6>
-            <p id="post-content" class="post-info">${fn:escapeXml(post_content)}</p>
+            <h3 class="title">${fn:escapeXml(post_title)}</h3>
+            <div class="div-id">
+            <span class="post-author">Posted by ${fn:escapeXml(post_user)} </span>
+            <span class="post-date">on ${fn:escapeXml(post_date)}</span>
+            </div>
+            <p class="post-content">${fn:escapeXml(post_content)}</p>
             </div>
             <%
+            numPosts++;
             }
+        if (!listAllPosts && numPosts >= 5) {
+      	  //More posts than we want on 1 page, so add a button to display all posts
+      	  %>
+      	  <form id="all-posts" action="/show" method="post">
+      	  		<input type="hidden" name="list-all" value="Yes">
+      	  		<button type="submit" class="btn" id="list-posts">List All Posts</button>
+      	  </form>
+      	  <%
+        }
         }
 	%>
 	</div>
@@ -125,6 +131,7 @@
 	    			</div>
 	    			<div class="modal-body">
 	    			<%
+	    				int numPosts = 0;
 	    				for (Post post : posts) {
 	    					if (user != null && user.equals(post.getUser())) {
 	    						pageContext.setAttribute("post_title", post.getTitle());
@@ -136,7 +143,13 @@
 	    						<button type="button" class="btn delete" onclick="deletePost(this)">Delete</button>
 	    						</div>
 	    						<%
+	    						numPosts++;
 	    					}
+	    				}
+	    				if (numPosts == 0) {
+	    					%>
+	    					<p>You have not made any posts yet.</p>
+	    					<%
 	    				}
 	    			%>
 	    			</div>
@@ -149,23 +162,6 @@
 	    <input id="hidden-title" type="hidden" name="delete-title">
 	    <input id="hidden-id" type="hidden" name="delete-id">
     </form>
-    <div id="postModal" class="modal fade" role="dialog">
-	    	<div class="modal-dialog">
-	    		<div class="modal-content">
-	    			<div class="modal-header">
-	    				<h1 id="post-modal-title">WHA?</h1>
-	    			</div>
-	    			<div class="modal-body">
-	    				<span id="post-modal-author">Test</span>
-	    				<span id="post-modal-date">Testing</span>
-	    				<p class="content" id="post-modal-content">Hi?</p>
-	    			</div>
-	    			<div class="modal-footer">
-	    				<button type="button" data-dismiss="modal" class="btn" id="close">Close Post</button>
-	    			</div>
-	    		</div>
-	    	</div>
-	    </div>
     <script src="scripts/blog.js"></script>
   </body>
 </html>
