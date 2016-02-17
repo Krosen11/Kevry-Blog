@@ -36,6 +36,22 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>show</servlet-name>
 		<url-pattern>/show</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>email</servlet-name>
+		<servlet-class>kevryblog.CronServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>email</servlet-name>
+		<url-pattern>/email</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>subscribe</servlet-name>
+		<servlet-class>kevryblog.SubscribeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>subscribe</servlet-name>
+		<url-pattern>/subscribe</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>kevry.jsp</welcome-file>
 	</welcome-file-list>
@@ -47,4 +63,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	        <filter-name>ObjectifyFilter</filter-name>
 	        <url-pattern>/*</url-pattern>
 	</filter-mapping>
+<!--<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>cron</web-resource-name>
+	        <url-pattern>/cron/*</url-pattern>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <role-name>admin</role-name>
+	    </auth-constraint>
+	</security-constraint> -->
 </web-app>

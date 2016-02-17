@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="kevryblog.Post" %>
+<%@ page import="kevryblog.Subscriber" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="org.w3c.dom.Document" %>
@@ -35,18 +36,22 @@
   	if (request.getParameter("list-all") != null) listAllPosts = true;
   	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
+    boolean subscribed = false;
+    
     if (user != null) {
       pageContext.setAttribute("user", user);
-	%>
-	<p class="sign-in">Welcome <span id="username">${fn:escapeXml(user.nickname)}</span> | 
-	<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Log Out</a></p>
-	<%
-	    } else {
-	%>
-	<p class="sign-in">Welcome Guest | 
-	<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Log in</a></p>
-	<%
-	    }
+	   	%>
+	   	<p class="sign-in">Welcome <span id="username">${fn:escapeXml(user.nickname)}</span> | 
+	   	<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Log Out</a></p>
+	   	<%
+    }
+
+	  else {
+		%>
+		<p class="sign-in">Welcome Guest | 
+		<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Log in</a></p>
+		<%
+	   }
 	%>
 	</div>
   	<%
@@ -59,8 +64,36 @@
   	<%
   		}
  	 ObjectifyService.register(Post.class);
+ 	 ObjectifyService.register(Subscriber.class);
  	 List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();   
+	 List<Subscriber> subs = ObjectifyService.ofy().load().type(Subscriber.class).list();
 	 Collections.sort(posts); 
+	 if(user != null){
+		 for(Subscriber sub: subs){
+			   if(sub.getUser().getEmail().equals(user.getEmail())){
+				 subscribed = true;
+				 break;
+			   }  
+		 }
+	 }
+
+ 	  %>
+ 	 <form action="/subscribe" method="post">
+ 	 <%
+	 if(subscribed && (user != null)){
+		 
+		 %>
+		 <input type="submit" value="Unsubscribe" />
+		 <%
+	 }
+	 else if(user != null){
+		 %>
+		 <input type="submit" value="Subscribe" />
+		 <%
+	 }
+ 	 %>
+ 	 </form>
+ 	 <%
     if (posts.isEmpty()) {
         %>
         <p>There are currently no posts in Kevry Blog. Please stay tuned!</p>

@@ -12,15 +12,17 @@ import com.google.appengine.api.users.UserServiceFactory;
 public class KevryBlogServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		
 		UserService userService = UserServiceFactory.getUserService();
       User user = userService.getCurrentUser();
       if (user != null) {
       	//This is when the user is logged in
          resp.setContentType("text/plain");
-         resp.getWriter().println("Hello, " + user.getNickname());
+         resp.getWriter().println("SO MUCH DEBUG Hello, " + user.getNickname());
       } else {
       	//User is not logged in
          resp.sendRedirect(userService.createLoginURL(req.getRequestURI()));
       }
+      
 	}
 }
