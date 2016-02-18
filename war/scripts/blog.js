@@ -21,5 +21,10 @@ function deletePost(item) {
 	$("#manage").submit();
 }
 
+function subscribeForm(item) {
+		$(item).wrap("<form class='sub-form' action='/subscribe' method='post'>");
+		$(item).closest("form").submit();
+}
+
 $("#makePost").click(modalPopup);
 $("#managePosts").click(managePosts);

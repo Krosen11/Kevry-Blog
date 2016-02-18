@@ -40,9 +40,35 @@
     
     if (user != null) {
       pageContext.setAttribute("user", user);
+      
+      ObjectifyService.register(Subscriber.class);
+      List<Subscriber> subs = ObjectifyService.ofy().load().type(Subscriber.class).list();
+      for(Subscriber sub: subs){
+		   if(sub.getUser().getEmail().equals(user.getEmail())){
+			 	subscribed = true;
+			 	break;
+		   }  
+	 	}
 	   	%>
 	   	<p class="sign-in">Welcome <span id="username">${fn:escapeXml(user.nickname)}</span> | 
-	   	<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Log Out</a></p>
+	   	<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Log Out</a><br>
+	   	<%
+	   	if (subscribed) {
+	   		%>
+	   		<span><a class="subscribe-link" href="#" onclick="subscribeForm(this)">Unsubscribe</a>
+	   		 from email notifications
+	   		</span>
+	   		<%
+	   	}
+	   	else {
+	   		%>
+	   		<span><a class="subscribe-link" href="#" onclick="subscribeForm(this)">Subscribe</a>
+	   		 to email notifications
+	   		</span>
+	   		<%
+	   	}
+	   	%>
+	   	</p>
 	   	<%
     }
 
@@ -64,36 +90,8 @@
   	<%
   		}
  	 ObjectifyService.register(Post.class);
- 	 ObjectifyService.register(Subscriber.class);
  	 List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();   
-	 List<Subscriber> subs = ObjectifyService.ofy().load().type(Subscriber.class).list();
 	 Collections.sort(posts); 
-	 if(user != null){
-		 for(Subscriber sub: subs){
-			   if(sub.getUser().getEmail().equals(user.getEmail())){
-				 subscribed = true;
-				 break;
-			   }  
-		 }
-	 }
-
- 	  %>
- 	 <form action="/subscribe" method="post">
- 	 <%
-	 if(subscribed && (user != null)){
-		 
-		 %>
-		 <input type="submit" value="Unsubscribe" />
-		 <%
-	 }
-	 else if(user != null){
-		 %>
-		 <input type="submit" value="Subscribe" />
-		 <%
-	 }
- 	 %>
- 	 </form>
- 	 <%
     if (posts.isEmpty()) {
         %>
         <p>There are currently no posts in Kevry Blog. Please stay tuned!</p>
@@ -105,16 +103,22 @@
         		pageContext.setAttribute("post_title", post.getTitle());
             pageContext.setAttribute("post_content", post.getContent());
             pageContext.setAttribute("post_date", post.getDate());
-            if (post.getUser() == null) {
-            	//TODO: Remove this if-else, since all posts will be made by people logged in
-            } else {
-                pageContext.setAttribute("post_user",
-                                         post.getUser());
-            }
+            pageContext.setAttribute("post_user", post.getUser());
             %>
             <div class="post-div">
             <h3 class="title">${fn:escapeXml(post_title)}</h3>
-            <div class="div-id">
+            <%
+            if (numPosts % 2 == 0) {
+            	%>
+            	<div class="div-id-1">
+            	<%
+            }
+            else {
+            	%>
+            	<div class="div-id-2">
+            	<%
+            }
+            %>
             <span class="post-author">Posted by ${fn:escapeXml(post_user)} </span>
             <span class="post-date">on ${fn:escapeXml(post_date)}</span>
             </div>

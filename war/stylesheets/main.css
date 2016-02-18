@@ -25,6 +25,12 @@ body {
 	color: #F6ED02;
 }
 
+#subscriber {
+	display: inline-block;
+	position: relative;
+	float: right;
+}
+
 #username {
 	text-decoration: underline;
 }
@@ -32,6 +38,21 @@ body {
 a {
 	/* Used for the link to log in/out */
 	color: #15A2FF;
+}
+
+a:hover {
+	/* Used for hovering over links */
+	color: #ABA301
+}
+
+/* Div for the buttons */
+.btn-div {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+#managePosts {
+	margin-left: 1em;
 }
 
 /* Div for each post */
@@ -49,8 +70,15 @@ a {
 	border-bottom-width: 2px;
 }
 
-.div-id {
-	background-color: red;
+.div-id-1 {
+	color: #EAEAEA;
+	background-color: #0F5D03;
+	border-bottom-style: groove;
+	border-bottom-width: 2px;
+}
+
+.div-id-2 {
+	background-color: #F6ED02;
 	border-bottom-style: groove;
 	border-bottom-width: 2px;
 }
